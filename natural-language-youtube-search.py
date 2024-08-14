@@ -1,6 +1,7 @@
 import cv2
 from PIL import Image
-import clip
+import cn_clip.clip as clip
+from cn_clip.clip import load_from_name, available_models
 import torch
 import math
 import numpy as np
@@ -78,13 +79,20 @@ def search_video(search_query, video_features, video_frames, fps, video_url, mod
 if __name__ == "__main__":
     # Main execution
     video_url = "https://www.youtube.com/watch?v=PGMu_Z89Ao8"
-    N = 120
+    N = 30
     video_path = 'video.mp4'
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model, preprocess = clip.load("ViT-B/32", device=device)
+    # model, preprocess = clip.load("ViT-B/32", device=device)
+    model, preprocess = load_from_name("ViT-B-16", device=device, download_root='./')
 
     video_frames, fps = extract_frames(video_path, N)
     video_features = encode_frames(video_frames, model, preprocess, device)
 
-    search_video("a fire truck", video_features, video_frames, fps, video_url, model, device)
+    # search_video("a fire truck", video_features, video_frames, fps, video_url, model, device)
+    # search_video("road works", video_features, video_frames, fps, video_url, model, device)
+    # search_video("people crossing the street", video_features, video_frames, fps, video_url, model, device)
+    # search_video("the Embarcadero", video_features, video_frames, fps, video_url, model, device)
+    search_video("在红灯处等待", video_features, video_frames, fps, video_url, model, device, display_results_count=3)
+    # search_video("a street with tram tracks", video_features, video_frames, fps, video_url, model, device)
+    # search_video("the Transamerica Pyramid", video_features, video_frames, fps, video_url, model, device)
